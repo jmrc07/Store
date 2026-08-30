@@ -1,0 +1,1910 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Karigar Hisab Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --wa-teal: #008069;
+  --wa-teal-dark: #075e54;
+  --wa-bg: #efeae2;
+  --wa-chat-bg: #f0f2f5;
+  --surface: #ffffff;
+  --line: #e2e8f0;
+  --border: #cbd5e1;
+  --text-main: #111b21;
+  --text-muted: #667781;
+  
+  --emerald: #059669;
+  --emerald-bg: #ecfdf5;
+  --emerald-border: #a7f3d0;
+  
+  --rose: #e11d48;
+  --rose-bg: #fff1f2;
+  --rose-border: #fecdd3;
+  
+  --amber: #d97706;
+  --amber-bg: #fffbeb;
+  --amber-border: #fde68a;
+  
+  --violet: #6d28d9;
+  --violet-bg: #f5f3ff;
+  --violet-border: #ddd6fe;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px -2px rgba(0,0,0,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background: var(--wa-chat-bg);
+  color: var(--text-main);
+  line-height: 1.4;
+  overflow-x: hidden;
+}
+
+.wa-app {
+  max-width: 600px;
+  margin: auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  padding-bottom: 74px;
+}
+
+/* Fixed Header Layout */
+.wa-header {
+  background: var(--wa-teal);
+  color: #fff;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.wa-header-brand {
+  flex: 1;
+  min-width: 0;
+  padding-right: 8px;
+}
+.wa-header-brand h1 { 
+  font-size: 17px; 
+  font-weight: 800; 
+  letter-spacing: -0.3px; 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+}
+.wa-header-actions { 
+  display: flex; 
+  gap: 6px; 
+  align-items: center;
+  position: relative; 
+  flex-shrink: 0;
+}
+.wa-icon-btn {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+.wa-icon-btn:active { background: rgba(255,255,255,0.35); }
+
+/* Horizontal Month Chips Bar */
+.month-chips-wrapper {
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  padding: 8px 12px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.month-chips-wrapper::-webkit-scrollbar { display: none; }
+
+.m-chip {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #f1f5f9;
+  color: var(--text-muted);
+  border: 1.5px solid var(--line);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.m-chip.active {
+  background: var(--wa-teal);
+  color: #fff;
+  border-color: var(--wa-teal);
+  box-shadow: 0 2px 6px rgba(0,128,105,0.3);
+}
+
+/* Interactive Global Stats */
+.wa-stats-bar {
+  background: #f8fafc;
+  border-bottom: 1px solid var(--line);
+  padding: 10px 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.wa-stat-card {
+  background: #fff;
+  border: 1.5px solid var(--line);
+  padding: 8px 10px;
+  border-radius: 10px;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+.wa-stat-card:active { transform: scale(0.98); }
+.wa-stat-card.active-filter {
+  border-color: var(--wa-teal);
+  background: #f0fdf9;
+  box-shadow: 0 0 0 2px var(--wa-teal);
+}
+.stat-title { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; display: flex; justify-content: space-between; }
+.stat-main { font-size: 16px; font-weight: 800; margin-top: 2px; }
+.stat-sub { font-size: 10px; color: var(--text-muted); font-weight: 600; margin-top: 1px; }
+
+/* Filter Pill Ribbon */
+.filter-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #e6fffa;
+  border-bottom: 1px solid #b2f5ea;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--wa-teal-dark);
+}
+.filter-indicator button {
+  background: none;
+  border: none;
+  color: var(--rose);
+  font-weight: 800;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+/* Worker List */
+.wa-chat-list { flex: 1; overflow-y: auto; background: #fff; }
+.wa-chat-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #f2f4f6;
+  cursor: pointer;
+}
+.wa-chat-item:active { background: #f5f6f8; }
+
+.wa-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #dfe5e7;
+  color: #54656f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  font-weight: 800;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.wa-chat-details { flex: 1; min-width: 0; }
+.wa-chat-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.wa-chat-name { font-size: 15px; font-weight: 800; color: var(--text-main); }
+.wa-chat-bal {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+.bal-due { background: var(--rose-bg); color: var(--rose); border: 1px solid var(--rose-border); }
+.bal-clear { background: var(--emerald-bg); color: var(--emerald); border: 1px solid var(--emerald-border); }
+
+/* Chips */
+.chips-container { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+.chips-line { display: flex; flex-wrap: wrap; gap: 4px; }
+.chip {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.chip-amber { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+.chip-violet { background: var(--violet-bg); color: var(--violet); border: 1px solid var(--violet-border); }
+.chip-emerald { background: var(--emerald-bg); color: var(--emerald); border: 1px solid var(--emerald-border); }
+.chip-neutral { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+
+/* Direct Input + Search Dock */
+.bottom-nav-dock {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 600px;
+  background: #fff;
+  border-top: 1px solid var(--line);
+  padding: 8px 10px;
+  display: flex;
+  gap: 8px;
+  box-shadow: 0 -3px 10px rgba(0,0,0,0.06);
+  z-index: 45;
+}
+.dock-input-wrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.dock-input-wrapper span {
+  position: absolute;
+  left: 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.dock-search-input {
+  width: 100%;
+  background: #f0f2f5;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 9px 30px 9px 30px;
+  font-size: 13px;
+  color: var(--text-main);
+  outline: none;
+  font-family: inherit;
+  font-weight: 600;
+}
+.dock-search-input:focus {
+  border-color: var(--wa-teal);
+  background: #fff;
+}
+.dock-clear-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+}
+.dock-save-btn {
+  background: var(--wa-teal);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Dedicated Chat Screen */
+.chat-page {
+  position: fixed;
+  inset: 0;
+  background: var(--wa-bg);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  max-width: 600px;
+  margin: auto;
+}
+.chat-header {
+  background: var(--wa-teal);
+  color: #fff;
+  padding: 10px 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  flex-shrink: 0;
+}
+.chat-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.chat-user-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.chat-back-btn {
+  background: transparent;
+  border: 0;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 2px;
+}
+.chat-avatar-sm {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--wa-teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+}
+.chat-header-actions { display: flex; align-items: center; gap: 6px; position: relative; }
+.action-icon-btn {
+  border: 0;
+  border-radius: 6px;
+  padding: 6px 9px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #fff;
+}
+.summary-btn { background: #d97706; }
+.report-modal-btn { background: #0284c7; }
+.share-btn { background: #25d366; }
+
+/* Fixed Floating Dropdown Menu */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 42px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  min-width: 180px;
+  z-index: 100;
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.dropdown-menu.show { display: block; }
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--text-main);
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-weight: 600;
+  border-bottom: 1px solid #f1f5f9;
+}
+.dropdown-item:last-child { border-bottom: none; }
+.dropdown-item:active { background: #f0f2f5; }
+
+/* In-Chat Pinned Summary Message Card */
+.in-chat-pin-wrapper {
+  margin: 4px 0 10px 0;
+  display: flex;
+  justify-content: center;
+}
+.in-chat-pin-card {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid var(--amber-border);
+  border-left: 5px solid var(--amber);
+  border-radius: 10px;
+  padding: 9px 12px;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.in-chat-pin-card:hover {
+  box-shadow: var(--shadow-md);
+  background: #fffdf9;
+}
+.pin-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: #78350f;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.pin-title-metric-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 800;
+}
+.pin-click-hint {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+/* Chat Body */
+.chat-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+.chat-bubble {
+  max-width: 86%;
+  border-radius: 10px;
+  padding: 8px 10px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  font-size: 12px;
+}
+.bubble-sender { align-self: flex-end; border-bottom-right-radius: 2px; }
+.bubble-receiver { align-self: flex-start; border-bottom-left-radius: 2px; }
+.bubble-raw { background: #fffdf5; border: 1px solid var(--amber-border); border-right: 4px solid var(--amber); }
+.bubble-work { background: #faf8ff; border: 1px solid var(--violet-border); border-left: 4px solid var(--violet); }
+.bubble-pay { background: #f4fbf7; border: 1px solid var(--emerald-border); border-right: 4px solid var(--emerald); }
+
+.bubble-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 3px; }
+.bubble-time { font-size: 10px; color: var(--text-muted); font-weight: 600; }
+.bubble-del { background: transparent; border: 0; color: #94a3b8; font-size: 12px; cursor: pointer; }
+.bubble-del:hover { color: var(--rose); }
+
+/* Chat Footer Entry */
+.chat-footer {
+  background: #ffffff;
+  border-top: 1px solid var(--line);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.tab-picker {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 4px;
+  background: #f0f2f5;
+  padding: 3px;
+  border-radius: 8px;
+}
+.tab-p-btn {
+  padding: 6px 2px;
+  font-size: 11px;
+  font-weight: 800;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  text-align: center;
+  cursor: pointer;
+}
+.tab-p-btn.active.raw { background: var(--amber); color: #fff; }
+.tab-p-btn.active.work { background: var(--violet); color: #fff; }
+.tab-p-btn.active.pay { background: var(--emerald); color: #fff; }
+
+.chat-input-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.chat-input {
+  width: 100%;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
+  font-family: inherit;
+  background: #fff;
+}
+.chat-submit-row { display: flex; gap: 6px; align-items: center; }
+.date-input {
+  flex: 1;
+  padding: 8px 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #f0f2f5;
+  color: var(--text-main);
+  outline: none;
+}
+.chat-save-btn {
+  flex: 1;
+  padding: 9px 12px;
+  font-size: 13px;
+  font-weight: 800;
+  border-radius: 8px;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+/* Modals */
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); align-items: center; justify-content: center; z-index: 120; padding: 14px; }
+.modal.show { display: flex; }
+.modal-box { background: #fff; padding: 16px; border-radius: 14px; width: min(460px, 100%); max-height: 90vh; overflow-y: auto; }
+
+/* Summary Breakdown Card Stacks */
+.summary-block {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+}
+.summary-block-head {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+.summary-sub-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  font-size: 12px;
+}
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 0;
+  font-size: 12px;
+  border-bottom: 1px dashed #f1f5f9;
+}
+.summary-row:last-child { border-bottom: none; }
+
+.hidden { display: none !important; }
+
+/* Clean Invoice Theme Print Styling */
+@media print {
+  body { background: #fff !important; }
+  .wa-app, #chatScreen, .modal, .bottom-nav-dock, .dropdown-menu { display: none !important; }
+  #printArea {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 18px !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    color: #1e293b !important;
+  }
+  .invoice-card-container {
+    border: 1.5px solid #008069 !important;
+    border-radius: 10px !important;
+    padding: 16px !important;
+    background: #ffffff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .invoice-header-box {
+    background: #f0fdf9 !important;
+    border: 1.5px solid #a7f3d0 !important;
+    border-left: 6px solid #008069 !important;
+    padding: 14px 18px !important;
+    border-radius: 8px !important;
+    margin-bottom: 14px !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .invoice-meta-grid {
+    display: grid !important;
+    grid-template-columns: 1.3fr 1fr !important;
+    gap: 12px !important;
+    background: #fafaf9 !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+    margin-bottom: 14px !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .invoice-separator {
+    height: 2px !important;
+    background: #008069 !important;
+    margin: 12px 0 16px 0 !important;
+    opacity: 0.85 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .pdf-section {
+    page-break-inside: avoid !important;
+    margin-bottom: 12px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .pdf-section-title {
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    border-bottom: 1.5px solid #cbd5e1 !important;
+    padding-bottom: 4px !important;
+    margin-bottom: 8px !important;
+  }
+}
+</style>
+</head>
+<body onclick="closeAllDropdowns(event)">
+
+<div class="wa-app" id="mainDashboard">
+  <!-- WhatsApp Top Header -->
+  <div class="wa-header">
+    <div class="wa-header-brand">
+      <h1 id="headerShopTitle">Karigar Hisab</h1>
+      <div style="font-size:10px;opacity:0.85;font-weight:600" id="headerShopSub">Fabric & Worker Ledger Suite</div>
+    </div>
+    <div class="wa-header-actions">
+      <button type="button" class="wa-icon-btn" title="Settings & Store Name" onclick="openModal('settingsModal')">⚙️</button>
+      <button type="button" class="wa-icon-btn" title="More Options" onclick="toggleGlobalMenu(event)">⋮</button>
+      
+      <!-- Global 3-dot dropdown menu -->
+      <div id="globalDropdown" class="dropdown-menu">
+        <button type="button" class="dropdown-item" onclick="exportGlobalExcel()">📊 Export All (Excel)</button>
+        <button type="button" class="dropdown-item" onclick="exportData()">💾 Backup Database</button>
+        <button type="button" class="dropdown-item" onclick="document.getElementById('fileInput').click()">📥 Restore Backup</button>
+        <input type="file" id="fileInput" class="hidden" accept=".json" onchange="importData(event)">
+      </div>
+    </div>
+  </div>
+
+  <!-- Horizontal Scrollable Month Filter Chips -->
+  <div class="month-chips-wrapper" id="monthChipsRow"></div>
+
+  <!-- Interactive Global Stats -->
+  <div class="wa-stats-bar">
+    <div class="wa-stat-card" id="card-raw" onclick="toggleFilter('raw')">
+      <div class="stat-title"><span>Fabric Baaki</span><span>🔍</span></div>
+      <div class="stat-main" id="st-raw-rem" style="color:var(--amber)">0 pcs</div>
+      <div class="stat-sub" id="st-raw-sub">Total Diya: 0 pcs</div>
+    </div>
+    <div class="wa-stat-card" id="card-work" onclick="toggleFilter('work')">
+      <div class="stat-title"><span>Kaam Received</span><span>🔍</span></div>
+      <div class="stat-main" id="st-work-total" style="color:var(--violet)">0 pcs</div>
+      <div class="stat-sub" id="st-work-amt">Mazdoori: ₹0</div>
+    </div>
+    <div class="wa-stat-card" id="card-pay" onclick="toggleFilter('pay')">
+      <div class="stat-title"><span>Total Payment</span><span>🔍</span></div>
+      <div class="stat-main" id="st-paid-amt" style="color:var(--emerald)">₹0</div>
+      <div class="stat-sub">Cash / Online</div>
+    </div>
+    <div class="wa-stat-card" id="card-due" onclick="toggleFilter('due')">
+      <div class="stat-title"><span>Net Balance Due</span><span>🔍</span></div>
+      <div class="stat-main" id="st-net-due">₹0</div>
+      <div class="stat-sub" id="st-due-sub">Barabar</div>
+    </div>
+  </div>
+
+  <!-- Filter Active Indicator -->
+  <div id="filterBanner" class="filter-indicator hidden">
+    <span id="filterBannerText">Filtered by: Fabric Baaki</span>
+    <button type="button" onclick="clearFilter()">Clear Filter ✕</button>
+  </div>
+
+  <!-- Worker Feed List -->
+  <div class="wa-chat-list" id="workersList"></div>
+
+  <!-- Direct Home Search & Save Dock -->
+  <div class="bottom-nav-dock">
+    <div class="dock-input-wrapper">
+      <span>🔍</span>
+      <input type="text" id="dockSearchInput" class="dock-search-input" placeholder="Type name to search / add..." oninput="onSearchInput(this.value)" onkeydown="if(event.key==='Enter') fastSaveFromDock()">
+      <button type="button" id="dockClearBtn" class="dock-clear-btn hidden" onclick="clearDockInput()">✕</button>
+    </div>
+    <button type="button" class="dock-save-btn" onclick="fastSaveFromDock()">＋ Save Karigar</button>
+  </div>
+</div>
+
+<!-- Chat Screen -->
+<div id="chatScreen" class="chat-page hidden">
+  <div class="chat-header">
+    <div class="chat-top-bar">
+      <div class="chat-user-group">
+        <button class="chat-back-btn" onclick="closeChat()">←</button>
+        <div class="chat-avatar-sm" id="chatAvatar">K</div>
+        <div style="min-width:0;overflow:hidden">
+          <div id="chatWorkerName" style="font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+          <div style="font-size:10px;opacity:0.9;font-weight:600" id="chatShopLabel">Fabric & Payment Ledger</div>
+        </div>
+      </div>
+      <div class="chat-header-actions">
+        <button type="button" class="action-icon-btn share-btn" onclick="shareKarigarWhatsApp()" title="Share WhatsApp Summary">📲 Share</button>
+        <button type="button" class="action-icon-btn report-modal-btn" onclick="openDownloadModal()">📥 Download / Print</button>
+        <button type="button" class="action-icon-btn summary-btn" onclick="openFullSummary()" title="Open Pin Summary">📌 Summary</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Timeline -->
+  <div class="chat-body" id="chatTimeline"></div>
+
+  <!-- Bottom Fast Entry Strip -->
+  <div class="chat-footer" id="chatEntryFooter">
+    <div class="tab-picker">
+      <button type="button" class="tab-p-btn active raw" id="cTabRaw" onclick="switchChatTab('raw')">＋ Fabric Diya</button>
+      <button type="button" class="tab-p-btn work" id="cTabWork" onclick="switchChatTab('work')">＋ Kaam Aaya</button>
+      <button type="button" class="tab-p-btn pay" id="cTabPay" onclick="switchChatTab('pay')">＋ Cash Diya</button>
+    </div>
+
+    <!-- 1. Fabric Entry -->
+    <div id="chatInputRaw">
+      <div class="chat-input-grid" style="margin-bottom:6px">
+        <input type="number" id="cInChiffon" placeholder="Chiffon (pcs)" class="chat-input" onkeydown="if(event.key==='Enter') saveChatEntry()">
+        <input type="number" id="cInJorjet" placeholder="Jorjet (pcs)" class="chat-input" onkeydown="if(event.key==='Enter') saveChatEntry()">
+      </div>
+      <div class="chat-submit-row">
+        <input type="date" id="cDateRaw" class="date-input">
+        <button type="button" class="chat-save-btn" style="background:var(--amber)" onclick="saveChatEntry()">Save Fabric ➤</button>
+      </div>
+    </div>
+
+    <!-- 2. Kaam Aaya Entry -->
+    <div id="chatInputWork" class="hidden">
+      <div class="chat-input-grid" style="margin-bottom:6px">
+        <select id="cInDesign" class="chat-input"></select>
+        <input type="number" id="cInQty" placeholder="Quantity (pcs)" class="chat-input" onkeydown="if(event.key==='Enter') saveChatEntry()">
+      </div>
+      <div class="chat-submit-row">
+        <input type="date" id="cDateWork" class="date-input">
+        <button type="button" class="chat-save-btn" style="background:var(--violet)" onclick="saveChatEntry()">Save Kaam ➤</button>
+      </div>
+    </div>
+
+    <!-- 3. Payment Entry -->
+    <div id="chatInputPay" class="hidden">
+      <div class="chat-input-grid" style="margin-bottom:6px">
+        <input type="number" id="cInAmount" placeholder="Amount (₹)" class="chat-input" onkeydown="if(event.key==='Enter') saveChatEntry()">
+        <input type="text" id="cInNote" placeholder="Remark / Detail" class="chat-input" onkeydown="if(event.key==='Enter') saveChatEntry()">
+      </div>
+      <div class="chat-submit-row">
+        <input type="date" id="cDatePay" class="date-input">
+        <button type="button" class="chat-save-btn" style="background:var(--emerald)" onclick="saveChatEntry()">Save Cash ➤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Download / Print Options -->
+<div id="downloadModal" class="modal">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;border-bottom:1px solid var(--line);padding-bottom:8px">
+      <h3 style="font-size:16px;font-weight:800;color:var(--text-main)">📄 Statement Download & Print</h3>
+      <button type="button" style="background:none;border:none;font-size:18px;cursor:pointer" onclick="closeModal('downloadModal')">✕</button>
+    </div>
+    
+    <div style="margin-bottom:14px">
+      <label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:6px">Kounse Month Ki Report Chahiye?</label>
+      <select id="reportMonthSelect" class="chat-input" style="font-weight:700"></select>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
+      <button type="button" style="background:#008069;color:#fff;border:none;padding:12px;border-radius:8px;font-weight:800;cursor:pointer" onclick="executeDownload('pdf')">🖨️ Print / PDF</button>
+      <button type="button" style="background:#107c41;color:#fff;border:none;padding:12px;border-radius:8px;font-weight:800;cursor:pointer" onclick="executeDownload('excel')">📊 Excel CSV</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Full Hisab Summary -->
+<div id="summaryModal" class="modal">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;border-bottom:1px solid var(--line);padding-bottom:8px">
+      <div>
+        <h3 style="font-size:16px;font-weight:800;color:var(--wa-teal-dark)">📌 Full Ledger Breakdown</h3>
+        <div id="modalSummaryWorkerName" style="font-size:12px;color:var(--text-muted);font-weight:600"></div>
+      </div>
+      <button type="button" style="background:none;border:none;font-size:18px;cursor:pointer" onclick="closeModal('summaryModal')">✕</button>
+    </div>
+
+    <div id="summaryModalContent"></div>
+
+    <button type="button" style="background:var(--wa-teal);color:#fff;border:none;width:100%;padding:10px;border-radius:8px;font-weight:700;margin-top:6px" onclick="closeModal('summaryModal')">Theek Hai (Close)</button>
+  </div>
+</div>
+
+<!-- Modal: Settings & Store Profile Master -->
+<div id="settingsModal" class="modal">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h3 style="font-size:16px;font-weight:800">Shop / Store Settings</h3>
+      <button type="button" style="background:none;border:none;font-size:16px;cursor:pointer" onclick="closeModal('settingsModal')">✕</button>
+    </div>
+
+    <!-- Store Profile Setup -->
+    <div style="background:#f8fafc;padding:10px;border-radius:10px;border:1px solid var(--line);margin-bottom:14px">
+      <div style="font-size:11px;font-weight:800;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px">🏪 Store / Shop Profile</div>
+      <input type="text" id="settingStoreName" placeholder="Apni Dukaan / Firm ka Naam" class="chat-input" style="margin-bottom:6px">
+      <input type="text" id="settingStorePhone" placeholder="Mobile / Phone Number" class="chat-input" style="margin-bottom:6px">
+      <button type="button" style="background:var(--wa-teal);color:#fff;border:none;padding:8px;border-radius:8px;font-weight:700;width:100%" onclick="saveStoreSettings()">💾 Store Info Save Karein</button>
+    </div>
+
+    <!-- Design Master -->
+    <div style="font-size:11px;font-weight:800;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px">✨ Design Master</div>
+    <div style="display:grid;gap:8px;margin-bottom:12px;background:#f8fafc;padding:10px;border-radius:10px;border:1px solid var(--line)">
+      <input type="text" id="newDName" placeholder="Design Name (e.g. Butti-101)" class="chat-input">
+      <div style="display:flex;gap:6px">
+        <select id="newDFabric" class="chat-input">
+          <option value="Chiffon">Chiffon</option>
+          <option value="Jorjet">Jorjet</option>
+        </select>
+        <input type="number" id="newDPrice" placeholder="Rate (₹)" class="chat-input" onkeydown="if(event.key==='Enter') addDesign()">
+      </div>
+      <button type="button" style="background:var(--wa-teal);color:#fff;border:none;padding:8px;border-radius:8px;font-weight:700" onclick="addDesign()">＋ Save Design</button>
+    </div>
+    <div id="designsMasterList" style="max-height:180px;overflow-y:auto"></div>
+  </div>
+</div>
+
+<!-- Dedicated Clean Invoice Print View Area -->
+<div id="printArea" class="hidden"></div>
+
+<script>
+const DB_KEY = 'karigar_hisab_suite_v3';
+let db = { 
+  store: { name: 'Karigar Hisab', phone: '' },
+  workers: [], 
+  designs: [], 
+  tx: [] 
+};
+
+try {
+  const loaded = JSON.parse(localStorage.getItem(DB_KEY) || localStorage.getItem('karigar_hisab_suite_v2') || localStorage.getItem('karigar_hisab_suite_v1'));
+  if (loaded && typeof loaded === 'object') {
+    db.store = loaded.store || { name: 'Karigar Hisab', phone: '' };
+    db.workers = Array.isArray(loaded.workers) ? loaded.workers : [];
+    db.designs = Array.isArray(loaded.designs) ? loaded.designs : [];
+    db.tx = Array.isArray(loaded.tx) ? loaded.tx : [];
+  }
+} catch (e) {
+  console.error("DB Load Error", e);
+}
+
+let activeWorkerId = null;
+let currentChatTab = 'raw';
+let activeFilter = null;
+let searchQuery = '';
+let selectedMonthFilter = 'ALL';
+
+function saveDB() {
+  localStorage.setItem(DB_KEY, JSON.stringify(db));
+  renderAll();
+}
+
+function money(n) {
+  return '₹' + Number(n || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 });
+}
+
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
+}
+
+function getToday() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function getCurrentMonthKey() {
+  return new Date().toISOString().slice(0, 7);
+}
+
+function formatMonthLabel(mKey) {
+  if (mKey === 'ALL') return 'All Months (Total)';
+  const [y, m] = mKey.split('-');
+  const dt = new Date(Number(y), Number(m) - 1, 1);
+  return dt.toLocaleString('en-IN', { month: 'short', year: 'numeric' });
+}
+
+function getAvailableMonths() {
+  const set = new Set();
+  set.add(getCurrentMonthKey());
+  db.tx.forEach(t => {
+    if (t.date && t.date.length >= 7) set.add(t.date.slice(0, 7));
+  });
+  return Array.from(set).sort().reverse();
+}
+
+function getWorkerStats(wid, monthFilter = null) {
+  let txs = db.tx.filter(x => x.workerId === wid);
+  if (monthFilter && monthFilter !== 'ALL') {
+    txs = txs.filter(x => (x.date || '').startsWith(monthFilter));
+  }
+  let rawChiffonGiven = 0, rawJorjetGiven = 0;
+  let workChiffonRecv = 0, workJorjetRecv = 0;
+  let earned = 0, paid = 0;
+  let designBreakdown = {};
+
+  txs.forEach(t => {
+    if (t.type === 'raw') {
+      rawChiffonGiven += Number(t.chiffon || 0);
+      rawJorjetGiven += Number(t.jorjet || 0);
+    } else if (t.type === 'work') {
+      const qty = Number(t.qty || 0);
+      const rate = Number(t.rate || 0);
+      const total = Number(t.total || (qty * rate));
+      
+      if (t.fabric === 'Chiffon') workChiffonRecv += qty;
+      if (t.fabric === 'Jorjet') workJorjetRecv += qty;
+      earned += total;
+
+      const dKey = `${t.designName} (${t.fabric})`;
+      if (!designBreakdown[dKey]) {
+        designBreakdown[dKey] = { qty: 0, rate: rate, amount: 0 };
+      }
+      designBreakdown[dKey].qty += qty;
+      designBreakdown[dKey].amount += total;
+    } else if (t.type === 'pay') {
+      paid += Number(t.amount || 0);
+    }
+  });
+
+  const totalRawGiven = rawChiffonGiven + rawJorjetGiven;
+  const netChiffon = rawChiffonGiven - workChiffonRecv;
+  const netJorjet = rawJorjetGiven - workJorjetRecv;
+  const netPieces = netChiffon + netJorjet;
+  const netDue = earned - paid;
+
+  return {
+    rawChiffonGiven, rawJorjetGiven, totalRawGiven,
+    workChiffonRecv, workJorjetRecv,
+    totalWorkQty: workChiffonRecv + workJorjetRecv,
+    netChiffon, netJorjet, netPieces,
+    earned, paid, netDue,
+    designBreakdown
+  };
+}
+
+function getGlobalStats() {
+  let totalNetChiffon = 0, totalNetJorjet = 0;
+  let totalGiven = 0, totalWorkQty = 0, totalWorkAmt = 0, totalPaid = 0, totalDue = 0;
+
+  db.workers.forEach(w => {
+    const s = getWorkerStats(w.id, selectedMonthFilter);
+    totalNetChiffon += s.netChiffon;
+    totalNetJorjet += s.netJorjet;
+    totalGiven += s.totalRawGiven;
+    totalWorkQty += s.totalWorkQty;
+    totalWorkAmt += s.earned;
+    totalPaid += s.paid;
+    totalDue += s.netDue;
+  });
+
+  return {
+    totalNetPieces: totalNetChiffon + totalNetJorjet,
+    totalNetChiffon, totalNetJorjet,
+    totalGiven, totalWorkQty, totalWorkAmt, totalPaid, totalDue
+  };
+}
+
+function toggleGlobalMenu(e) {
+  e.stopPropagation();
+  const m = document.getElementById('globalDropdown');
+  m.classList.toggle('show');
+}
+
+function closeAllDropdowns() {
+  const g = document.getElementById('globalDropdown');
+  if (g) g.classList.remove('show');
+}
+
+function toggleFilter(filterKey) {
+  activeFilter = (activeFilter === filterKey) ? null : filterKey;
+  renderAll();
+}
+
+function clearFilter() {
+  activeFilter = null;
+  renderAll();
+}
+
+function setMonthFilter(mKey, shouldScrollToCenter = false) {
+  selectedMonthFilter = mKey;
+  renderMonthChips();
+  renderAll();
+
+  if (shouldScrollToCenter) {
+    setTimeout(() => {
+      const activeEl = document.querySelector(`.m-chip[data-month="${mKey}"]`);
+      if (activeEl) {
+        activeEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    }, 50);
+  }
+}
+
+function renderMonthChips() {
+  const wrapper = document.getElementById('monthChipsRow');
+  if (!wrapper) return;
+
+  const months = getAvailableMonths();
+  let html = `
+    <button type="button" class="m-chip ${selectedMonthFilter === 'ALL' ? 'active' : ''}" data-month="ALL" onclick="setMonthFilter('ALL', true)">
+      🌐 All Months
+    </button>
+  `;
+
+  months.forEach(m => {
+    const active = (selectedMonthFilter === m) ? 'active' : '';
+    html += `
+      <button type="button" class="m-chip ${active}" data-month="${m}" onclick="setMonthFilter('${m}', true)">
+        📅 ${formatMonthLabel(m)}
+      </button>
+    `;
+  });
+
+  wrapper.innerHTML = html;
+}
+
+function renderAll() {
+  const shopName = (db.store && db.store.name) ? db.store.name : 'Karigar Hisab';
+  document.getElementById('headerShopTitle').textContent = shopName;
+  document.getElementById('headerShopSub').textContent = db.store?.phone ? `Contact: ${db.store.phone}` : 'Fabric & Worker Ledger Suite';
+
+  const gs = getGlobalStats();
+  document.getElementById('st-raw-rem').textContent = `${gs.totalNetPieces} pcs`;
+  document.getElementById('st-raw-sub').textContent = `Total Diya: ${gs.totalGiven} pcs`;
+  document.getElementById('st-work-total').textContent = `${gs.totalWorkQty} pcs`;
+  document.getElementById('st-work-amt').textContent = `Mazdoori: ${money(gs.totalWorkAmt)}`;
+  document.getElementById('st-paid-amt').textContent = money(gs.totalPaid);
+
+  const dueEl = document.getElementById('st-net-due');
+  dueEl.textContent = money(Math.abs(gs.totalDue));
+  dueEl.style.color = gs.totalDue > 0 ? 'var(--rose)' : (gs.totalDue < 0 ? 'var(--emerald)' : 'inherit');
+  document.getElementById('st-due-sub').textContent = gs.totalDue > 0 ? 'Karigaron ko dena baki' : (gs.totalDue < 0 ? 'Advance jama hai' : 'Barabar');
+
+  ['raw', 'work', 'pay', 'due'].forEach(k => {
+    const card = document.getElementById(`card-${k}`);
+    if (card) card.classList.toggle('active-filter', activeFilter === k);
+  });
+
+  const banner = document.getElementById('filterBanner');
+  const bannerText = document.getElementById('filterBannerText');
+  if (activeFilter) {
+    banner.classList.remove('hidden');
+    const labels = {
+      raw: 'Filter: Fabric Baaki Wale Karigar',
+      work: 'Filter: Kaam Aaye Hue Karigar',
+      pay: 'Filter: Paid Payment Wale Karigar',
+      due: 'Filter: Balance Dena Baki Karigar'
+    };
+    bannerText.textContent = `${labels[activeFilter]} (${formatMonthLabel(selectedMonthFilter)})`;
+  } else {
+    banner.classList.add('hidden');
+  }
+
+  renderWorkers();
+  if (activeWorkerId) renderChatView();
+}
+
+function renderWorkers() {
+  const listEl = document.getElementById('workersList');
+  if (!listEl) return;
+
+  let filtered = db.workers.filter(w => (w.name || '').toLowerCase().includes(searchQuery.toLowerCase()));
+
+  if (activeFilter) {
+    filtered = filtered.filter(w => {
+      const s = getWorkerStats(w.id, selectedMonthFilter);
+      if (activeFilter === 'raw') return s.netPieces > 0;
+      if (activeFilter === 'work') return s.totalWorkQty > 0;
+      if (activeFilter === 'pay') return s.paid > 0;
+      if (activeFilter === 'due') return s.netDue > 0;
+      return true;
+    });
+  }
+
+  if (!filtered.length) {
+    listEl.innerHTML = `<div style="text-align:center;padding:50px 20px;color:var(--text-muted);font-size:13px">Koi record nahi mila. Neeche naam likh kar <b>＋ Save Karigar</b> karein.</div>`;
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(w => {
+    const s = getWorkerStats(w.id, selectedMonthFilter);
+    const isDue = s.netDue > 0;
+    const initial = (w.name || 'K').trim().charAt(0).toUpperCase();
+
+    return `
+      <div class="wa-chat-item" onclick="openChat('${w.id}')">
+        <div class="wa-avatar">${initial}</div>
+        <div class="wa-chat-details">
+          <div class="wa-chat-top">
+            <div class="wa-chat-name">${esc(w.name)}</div>
+            <div class="wa-chat-bal ${isDue ? 'bal-due' : 'bal-clear'}">
+              ${isDue ? 'Dena: ' + money(s.netDue) : 'Advance: ' + money(Math.abs(s.netDue))}
+            </div>
+          </div>
+          <div class="chips-container">
+            <div class="chips-line">
+              <span class="chip chip-amber">📦 Fabric Baaki: <b>${s.netPieces} pcs</b></span>
+              <span class="chip chip-neutral">Diya: <b>${s.totalRawGiven} pcs</b></span>
+              <span class="chip chip-neutral">Ch: ${s.netChiffon} | Jor: ${s.netJorjet}</span>
+            </div>
+            <div class="chips-line">
+              <span class="chip chip-violet">✨ Kaam: <b>${s.totalWorkQty} pcs</b></span>
+              <span class="chip chip-emerald">Paid: <b>${money(s.paid)}</b></span>
+              <span class="chip chip-neutral">Mazdoori: ${money(s.earned)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function onSearchInput(val) {
+  searchQuery = val;
+  const clearBtn = document.getElementById('dockClearBtn');
+  if (clearBtn) clearBtn.classList.toggle('hidden', !val);
+  renderWorkers();
+}
+
+function clearDockInput() {
+  const input = document.getElementById('dockSearchInput');
+  input.value = '';
+  onSearchInput('');
+  input.focus();
+}
+
+function fastSaveFromDock() {
+  const input = document.getElementById('dockSearchInput');
+  const name = input ? input.value.trim() : '';
+  if (!name) {
+    input.focus();
+    return alert('Pehle karigar ka naam type karein');
+  }
+
+  const exists = db.workers.find(w => w.name.toLowerCase() === name.toLowerCase());
+  if (exists) {
+    if (confirm(`'${exists.name}' pehle se maujood hai. Kya aap unka hisab kholna chahte hain?`)) {
+      clearDockInput();
+      openChat(exists.id);
+    }
+    return;
+  }
+
+  const newId = crypto.randomUUID();
+  db.workers.push({ id: newId, name });
+  clearDockInput();
+  saveDB();
+  openChat(newId);
+}
+
+function openChat(wid) {
+  activeWorkerId = wid;
+  closeAllDropdowns();
+  document.getElementById('chatScreen').classList.remove('hidden');
+  
+  const today = getToday();
+  document.getElementById('cDateRaw').value = today;
+  document.getElementById('cDateWork').value = today;
+  document.getElementById('cDatePay').value = today;
+  
+  populateDesignDropdown();
+  renderChatView();
+}
+
+function closeChat() {
+  activeWorkerId = null;
+  closeAllDropdowns();
+  document.getElementById('chatScreen').classList.add('hidden');
+  renderAll();
+}
+
+function switchChatTab(tab) {
+  currentChatTab = tab;
+  ['raw', 'work', 'pay'].forEach(t => {
+    const btn = document.getElementById(`cTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
+    const inputRow = document.getElementById(`chatInput${t.charAt(0).toUpperCase() + t.slice(1)}`);
+    if (btn) btn.className = `tab-p-btn ${t} ${t === tab ? 'active' : ''}`;
+    if (inputRow) inputRow.classList.toggle('hidden', t !== tab);
+  });
+}
+
+function populateDesignDropdown() {
+  const sel = document.getElementById('cInDesign');
+  if (!sel) return;
+  sel.innerHTML = db.designs.length 
+    ? db.designs.map(d => `<option value="${d.id}">${esc(d.name)} (${esc(d.fabric)}) @ ₹${d.price}</option>`).join('')
+    : '<option value="">⚙️ Pehle Setting se Design Add Karein</option>';
+}
+
+function openFullSummary() {
+  closeAllDropdowns();
+  const worker = db.workers.find(w => w.id === activeWorkerId);
+  if (!worker) return;
+
+  const s = getWorkerStats(worker.id);
+  document.getElementById('modalSummaryWorkerName').textContent = `Karigar: ${worker.name}`;
+
+  let designReceivedListHTML = '';
+  let designAmountBreakdownHTML = '';
+  const dKeys = Object.keys(s.designBreakdown);
+
+  if (dKeys.length) {
+    designReceivedListHTML = dKeys.map(k => `
+      <div class="summary-row">
+        <span>• ${esc(k)}</span>
+        <b>${s.designBreakdown[k].qty} pcs</b>
+      </div>
+    `).join('');
+
+    designAmountBreakdownHTML = dKeys.map(k => `
+      <div class="summary-row">
+        <span>• ${esc(k)} <small style="color:var(--text-muted)">(${s.designBreakdown[k].qty} pcs @ ₹${s.designBreakdown[k].rate})</small></span>
+        <b>${money(s.designBreakdown[k].amount)}</b>
+      </div>
+    `).join('');
+  } else {
+    designReceivedListHTML = `<div style="color:var(--text-muted);font-size:11px">Koi design receipt nahi hai.</div>`;
+    designAmountBreakdownHTML = `<div style="color:var(--text-muted);font-size:11px">Koi design mazdoori nahi hai.</div>`;
+  }
+
+  const content = `
+    <!-- 1. Total Fabric Given -->
+    <div class="summary-block" style="background:var(--amber-bg);border-color:var(--amber-border)">
+      <div class="summary-block-head" style="color:var(--amber)">
+        <span>1. Total Fabric Given</span>
+        <b>${s.totalRawGiven} pcs</b>
+      </div>
+      <div class="summary-sub-grid">
+        <div>Chiffon: <b>${s.rawChiffonGiven} pcs</b></div>
+        <div>Jorjet: <b>${s.rawJorjetGiven} pcs</b></div>
+      </div>
+    </div>
+
+    <!-- 2. Design Received -->
+    <div class="summary-block" style="background:var(--violet-bg);border-color:var(--violet-border)">
+      <div class="summary-block-head" style="color:var(--violet)">
+        <span>2. Design Received</span>
+        <b>${s.totalWorkQty} pcs</b>
+      </div>
+      <div class="summary-sub-grid" style="margin-bottom:6px;border-bottom:1px solid var(--violet-border);padding-bottom:4px">
+        <div>Chiffon: <b>${s.workChiffonRecv} pcs</b></div>
+        <div>Jorjet: <b>${s.workJorjetRecv} pcs</b></div>
+      </div>
+      <div style="font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:4px">DESIGN BREAKDOWN:</div>
+      ${designReceivedListHTML}
+    </div>
+
+    <!-- 3. Net Fabric Remaining -->
+    <div class="summary-block" style="background:#f8fafc;border-color:var(--border)">
+      <div class="summary-block-head" style="color:var(--text-main)">
+        <span>3. Net Fabric Remaining</span>
+        <b style="color:${s.netPieces > 0 ? 'var(--amber)' : 'var(--emerald)'}">${s.netPieces} pcs</b>
+      </div>
+      <div class="summary-sub-grid">
+        <div>Chiffon Baaki: <b>${s.netChiffon} pcs</b></div>
+        <div>Jorjet Baaki: <b>${s.netJorjet} pcs</b></div>
+      </div>
+    </div>
+
+    <!-- 4. Net Amount Calculation & Breakdown -->
+    <div class="summary-block" style="background:var(--emerald-bg);border-color:var(--emerald-border)">
+      <div class="summary-block-head" style="color:var(--emerald)">
+        <span>4. Net Amount Calculation</span>
+      </div>
+      
+      <div style="font-size:11px;font-weight:700;color:var(--text-muted);margin:4px 0">DESIGN MAZDOORI DETAILS (Rate @ Qty):</div>
+      ${designAmountBreakdownHTML}
+
+      <div class="summary-row" style="margin-top:6px;border-top:1px solid var(--emerald-border);padding-top:4px">
+        <span><b>Total Mazdoori (Earned):</b></span>
+        <b>${money(s.earned)}</b>
+      </div>
+      <div class="summary-row">
+        <span>Total Paid (Cash / Online):</span>
+        <b style="color:var(--rose)">- ${money(s.paid)}</b>
+      </div>
+      <div class="summary-row" style="border-top:1.5px solid var(--emerald-border);margin-top:4px;padding-top:4px;font-size:13px">
+        <span><b>Net Balance:</b></span>
+        <b style="color:${s.netDue > 0 ? 'var(--rose)' : 'var(--emerald)'}">
+          ${s.netDue > 0 ? 'Dena Hai: ' + money(s.netDue) : (s.netDue < 0 ? 'Advance: ' + money(Math.abs(s.netDue)) : 'Barabar (₹0)')}
+        </b>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('summaryModalContent').innerHTML = content;
+  openModal('summaryModal');
+}
+
+function renderChatView() {
+  const worker = db.workers.find(w => w.id === activeWorkerId);
+  if (!worker) return closeChat();
+
+  const s = getWorkerStats(worker.id);
+  document.getElementById('chatWorkerName').textContent = worker.name;
+  document.getElementById('chatAvatar').textContent = (worker.name || 'K').trim().charAt(0).toUpperCase();
+  document.getElementById('chatShopLabel').textContent = db.store?.name ? `Store: ${db.store.name}` : 'Fabric & Payment Ledger';
+
+  const isDue = s.netDue > 0;
+  const balanceLabel = isDue ? `Dena: ${money(s.netDue)}` : (s.netDue < 0 ? `Adv: ${money(Math.abs(s.netDue))}` : 'Barabar');
+  const balColor = isDue ? 'var(--rose)' : 'var(--emerald)';
+
+  const txs = db.tx.filter(x => x.workerId === worker.id);
+  txs.sort((a, b) => a.date.localeCompare(b.date) || a.created - b.created);
+
+  const timeline = document.getElementById('chatTimeline');
+
+  const pinnedCardHTML = `
+    <div class="in-chat-pin-wrapper">
+      <div class="in-chat-pin-card" onclick="openFullSummary()">
+        <div class="pin-top-row">
+          <span>📌 Pinned Hisab Summary</span>
+          <span style="color:${balColor}">${balanceLabel}</span>
+        </div>
+        <div class="pin-title-metric-bar">
+          <span style="color:var(--amber)">📦 Net Fabric: <b>${s.netPieces} pcs</b></span>
+          <span style="color:${balColor}">💵 Net Amount: <b>${money(Math.abs(s.netDue))}</b></span>
+        </div>
+        <div class="pin-click-hint">
+          <span>Ch: ${s.netChiffon} | Jor: ${s.netJorjet}</span>
+          <span style="color:var(--wa-teal);font-weight:800">Tap for Full Breakdown ↗</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  let entriesHTML = txs.map(t => {
+    if (t.type === 'raw') {
+      const tot = Number(t.chiffon || 0) + Number(t.jorjet || 0);
+      return `
+        <div class="chat-bubble bubble-sender bubble-raw">
+          <div class="bubble-head">
+            <b style="color:var(--amber)">📦 Fabric Diya (+${tot} pcs)</b>
+            <div>
+              <span class="bubble-time">${esc(t.date)}</span>
+              <button class="bubble-del" onclick="deleteTx('${t.id}')">✕</button>
+            </div>
+          </div>
+          <div>Chiffon: <b>${t.chiffon || 0} pcs</b> | Jorjet: <b>${t.jorjet || 0} pcs</b></div>
+        </div>
+      `;
+    } else if (t.type === 'work') {
+      return `
+        <div class="chat-bubble bubble-receiver bubble-work">
+          <div class="bubble-head">
+            <b style="color:var(--violet)">✨ Kaam Received (-${t.qty} pcs)</b>
+            <div>
+              <span class="bubble-time">${esc(t.date)}</span>
+              <button class="bubble-del" onclick="deleteTx('${t.id}')">✕</button>
+            </div>
+          </div>
+          <div><b>${esc(t.designName)}</b> (${esc(t.fabric)})</div>
+          <div>${t.qty} pcs × ${money(t.rate)} = <b style="color:var(--violet)">${money(t.total)}</b></div>
+        </div>
+      `;
+    } else if (t.type === 'pay') {
+      return `
+        <div class="chat-bubble bubble-sender bubble-pay">
+          <div class="bubble-head">
+            <b style="color:var(--emerald)">💵 Payment Diya</b>
+            <div>
+              <span class="bubble-time">${esc(t.date)}</span>
+              <button class="bubble-del" onclick="deleteTx('${t.id}')">✕</button>
+            </div>
+          </div>
+          <div style="font-size:15px;font-weight:800;color:var(--emerald)">${money(t.amount)}</div>
+          ${t.note ? `<div style="font-size:11px;color:var(--text-muted)">Note: ${esc(t.note)}</div>` : ''}
+        </div>
+      `;
+    }
+  }).join('');
+
+  timeline.innerHTML = pinnedCardHTML + (entriesHTML || `<div style="text-align:center;margin:20px auto;color:var(--text-muted);font-size:12px;background:#fff;padding:8px 14px;border-radius:20px;box-shadow:var(--shadow-sm)">Koi transaction entry nahi hai. Neeche se add karein.</div>`);
+  timeline.scrollTop = timeline.scrollHeight;
+}
+
+function saveChatEntry() {
+  if (!activeWorkerId) return;
+
+  if (currentChatTab === 'raw') {
+    const date = document.getElementById('cDateRaw').value || getToday();
+    const ch = Number(document.getElementById('cInChiffon').value || 0);
+    const jo = Number(document.getElementById('cInJorjet').value || 0);
+    if (ch <= 0 && jo <= 0) return alert('Chiffon ya Jorjet quantity daalein');
+
+    db.tx.push({ id: crypto.randomUUID(), workerId: activeWorkerId, date, type: 'raw', chiffon: ch, jorjet: jo, created: Date.now() });
+    document.getElementById('cInChiffon').value = '';
+    document.getElementById('cInJorjet').value = '';
+  } else if (currentChatTab === 'work') {
+    const date = document.getElementById('cDateWork').value || getToday();
+    const dId = document.getElementById('cInDesign').value;
+    const qty = Number(document.getElementById('cInQty').value || 0);
+    const design = db.designs.find(x => x.id === dId);
+    if (!design) return alert('Pehle setting se design add karein');
+    if (qty <= 0) return alert('Valid Quantity daalein');
+
+    db.tx.push({
+      id: crypto.randomUUID(),
+      workerId: activeWorkerId,
+      date,
+      type: 'work',
+      designId: design.id,
+      designName: design.name,
+      fabric: design.fabric,
+      rate: design.price,
+      qty,
+      total: qty * design.price,
+      created: Date.now()
+    });
+    document.getElementById('cInQty').value = '';
+  } else if (currentChatTab === 'pay') {
+    const date = document.getElementById('cDatePay').value || getToday();
+    const amt = Number(document.getElementById('cInAmount').value || 0);
+    const note = document.getElementById('cInNote').value.trim();
+    if (amt <= 0) return alert('Valid Amount daalein');
+
+    db.tx.push({ id: crypto.randomUUID(), workerId: activeWorkerId, date, type: 'pay', amount: amt, note, created: Date.now() });
+    document.getElementById('cInAmount').value = '';
+    document.getElementById('cInNote').value = '';
+  }
+
+  saveDB();
+}
+
+function deleteTx(id) {
+  if (confirm('Is entry ko delete karein?')) {
+    db.tx = db.tx.filter(x => x.id !== id);
+    saveDB();
+  }
+}
+
+// WhatsApp Direct Text Receipt Share (Works without Hosting)
+function shareKarigarWhatsApp() {
+  const worker = db.workers.find(w => w.id === activeWorkerId);
+  if (!worker) return;
+
+  const s = getWorkerStats(worker.id);
+  const txs = db.tx.filter(x => x.workerId === worker.id);
+  txs.sort((a, b) => a.date.localeCompare(b.date) || a.created - b.created);
+
+  const startPeriod = txs.length ? txs[0].date : getToday();
+  const endPeriod = getToday();
+  const storeName = db.store?.name || 'Karigar Hisab';
+
+  let txt = `*🧾 ${storeName.toUpperCase()} - HISAB PARCHA*\n`;
+  txt += `━━━━━━━━━━━━━━━━━━━━━\n`;
+  txt += `👤 *Karigar:* ${worker.name}\n`;
+  txt += `📅 *Period:* ${startPeriod} se ${endPeriod}\n\n`;
+
+  txt += `*📦 FABRIC SUMMARY:*\n`;
+  txt += `• Total Fabric Diya: *${s.totalRawGiven} pcs*\n`;
+  txt += `• Total Kaam Aaya: *${s.totalWorkQty} pcs*\n`;
+  txt += `• *Net Fabric Baaki: ${s.netPieces} pcs* (Ch: ${s.netChiffon} | Jor: ${s.netJorjet})\n\n`;
+
+  txt += `*💵 PAYMENT & MAZDOORI:*\n`;
+  txt += `• Total Mazdoori Banti Hai: *${money(s.earned)}*\n`;
+  txt += `• Total Cash Diya: *${money(s.paid)}*\n`;
+  txt += `━━━━━━━━━━━━━━━━━━━━━\n`;
+  if (s.netDue > 0) {
+    txt += `🔴 *NET DENA BAAKI: ${money(s.netDue)}*\n`;
+  } else if (s.netDue < 0) {
+    txt += `🟢 *ADVANCE JAMA HAI: ${money(Math.abs(s.netDue))}*\n`;
+  } else {
+    txt += `✅ *NET BALANCE: HISAB BARABAR (₹0)*\n`;
+  }
+  txt += `━━━━━━━━━━━━━━━━━━━━━\n\n`;
+
+  const lastFew = txs.slice(-5);
+  if (lastFew.length) {
+    txt += `*📝 Recent Entries (Aakhri ${lastFew.length}):*\n`;
+    lastFew.forEach(t => {
+      if (t.type === 'raw') txt += `• ${t.date}: Fabric +${Number(t.chiffon || 0) + Number(t.jorjet || 0)} pcs (Ch:${t.chiffon || 0}, Jor:${t.jorjet || 0})\n`;
+      if (t.type === 'work') txt += `• ${t.date}: Kaam -${t.qty} pcs (${t.designName} @ ₹${t.rate}) = ${money(t.total)}\n`;
+      if (t.type === 'pay') txt += `• ${t.date}: Paid Cash ${money(t.amount)} ${t.note ? '(' + t.note + ')' : ''}\n`;
+    });
+    txt += `\n`;
+  }
+
+  if (db.store?.phone) txt += `📞 Helpline: ${db.store.phone}\n`;
+  txt += `_Thank you for your work!_`;
+
+  const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`;
+  window.open(waUrl, '_blank');
+}
+
+// Download Modal Setup
+function openDownloadModal() {
+  const sel = document.getElementById('reportMonthSelect');
+  const months = getAvailableMonths();
+  sel.innerHTML = `<option value="ALL">All Months (Starting Month se Till Date)</option>` +
+    months.map(m => `<option value="${m}">${formatMonthLabel(m)} Month Only</option>`).join('');
+  openModal('downloadModal');
+}
+
+function executeDownload(format) {
+  const mChoice = document.getElementById('reportMonthSelect').value;
+  closeModal('downloadModal');
+  if (format === 'pdf') {
+    generateInvoicePDF(mChoice);
+  } else {
+    downloadStatementExcel(mChoice);
+  }
+}
+
+// Clean Emerald-Themed Invoice Print Engine
+function generateInvoicePDF(monthChoice = 'ALL') {
+  const worker = db.workers.find(w => w.id === activeWorkerId);
+  if (!worker) return;
+
+  let txs = db.tx.filter(x => x.workerId === worker.id);
+  txs.sort((a, b) => a.date.localeCompare(b.date) || a.created - b.created);
+
+  const startPeriod = txs.length ? txs[0].date : getToday();
+  const endPeriod = getToday();
+
+  let filteredTxs = txs;
+  let periodLabel = `Kab se (${startPeriod}) se Till Date (${endPeriod})`;
+  let filePeriodStr = `${startPeriod}_to_${endPeriod}`;
+
+  if (monthChoice !== 'ALL') {
+    filteredTxs = txs.filter(x => (x.date || '').startsWith(monthChoice));
+    periodLabel = `Month: ${formatMonthLabel(monthChoice)} (Till Date: ${endPeriod})`;
+    filePeriodStr = monthChoice;
+  }
+
+  // Dynamic Browser & PDF File Title
+  const cleanWorkerName = (worker.name || 'Karigar').replace(/[^a-zA-Z0-9_\u0900-\u097F]/g, '_');
+  const pdfFileName = `${cleanWorkerName}_Hisab_${filePeriodStr}`;
+  const originalTitle = document.title;
+  document.title = pdfFileName;
+
+  const s = getWorkerStats(worker.id, monthChoice);
+  const storeName = (db.store && db.store.name) ? db.store.name : 'Karigar Hisab';
+  const storePhone = db.store?.phone ? ` | Helpline: ${db.store.phone}` : '';
+
+  let designBreakdownRows = '';
+  let amountBreakdownRows = '';
+  const dKeys = Object.keys(s.designBreakdown);
+
+  dKeys.forEach(name => {
+    const d = s.designBreakdown[name];
+    designBreakdownRows += `<tr><td style="padding:5px 8px;border:1px solid #cbd5e1">${esc(name)}</td><td style="padding:5px 8px;border:1px solid #cbd5e1;text-align:right"><b>${d.qty} pcs</b></td></tr>`;
+    amountBreakdownRows += `<tr><td style="padding:5px 8px;border:1px solid #cbd5e1">${esc(name)} (${d.qty} pcs @ ₹${d.rate})</td><td style="padding:5px 8px;border:1px solid #cbd5e1;text-align:right"><b>${money(d.amount)}</b></td></tr>`;
+  });
+
+  let rowsHTML = filteredTxs.map((t, idx) => {
+    let typeName = '', detail = '', rawMov = '-', amt = '-';
+    if (t.type === 'raw') {
+      typeName = 'Fabric Diya';
+      detail = `Chiffon: ${t.chiffon || 0}, Jorjet: ${t.jorjet || 0}`;
+      rawMov = `+${Number(t.chiffon || 0) + Number(t.jorjet || 0)} pcs`;
+    } else if (t.type === 'work') {
+      typeName = 'Kaam Received';
+      detail = `${esc(t.designName)} (${esc(t.fabric)}) @ ₹${t.rate}`;
+      rawMov = `-${t.qty} pcs`;
+      amt = money(t.total);
+    } else if (t.type === 'pay') {
+      typeName = 'Payment Paid';
+      detail = t.note ? esc(t.note) : 'Cash / Online';
+      amt = money(t.amount);
+    }
+    return `
+      <tr>
+        <td style="border:1px solid #cbd5e1;padding:6px;text-align:center">${idx + 1}</td>
+        <td style="border:1px solid #cbd5e1;padding:6px">${esc(t.date)}</td>
+        <td style="border:1px solid #cbd5e1;padding:6px;font-weight:bold">${typeName}</td>
+        <td style="border:1px solid #cbd5e1;padding:6px">${detail}</td>
+        <td style="border:1px solid #cbd5e1;padding:6px;text-align:center">${rawMov}</td>
+        <td style="border:1px solid #cbd5e1;padding:6px;text-align:right">${amt}</td>
+      </tr>
+    `;
+  }).join('');
+
+  const printArea = document.getElementById('printArea');
+  printArea.innerHTML = `
+    <div class="invoice-card-container" style="max-width:820px;margin:auto">
+      
+      <!-- 1. Header Box -->
+      <div class="invoice-header-box">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <h1 style="font-size:22px;font-weight:800;color:#075e54;margin:0">${esc(storeName)}</h1>
+            <div style="font-size:12px;color:#047857;font-weight:600;margin-top:2px">Worker Ledger & Work Invoice Statement ${esc(storePhone)}</div>
+          </div>
+          <div style="text-align:right">
+            <span style="background:#008069;color:#fff;font-size:11px;font-weight:800;padding:4px 10px;border-radius:4px;text-transform:uppercase">Official Ledger</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Karigar Metadata Details -->
+      <div class="invoice-meta-grid">
+        <div>
+          <div style="font-size:10px;font-weight:800;color:#64748b;text-transform:uppercase">Report For Karigar:</div>
+          <div style="font-size:19px;font-weight:800;color:#0f172a;margin-top:2px">${esc(worker.name)}</div>
+          <div style="font-size:12px;font-weight:600;color:#334155;margin-top:4px">📅 ${periodLabel}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:10px;font-weight:800;color:#64748b;text-transform:uppercase">Report Generated Date:</div>
+          <div style="font-size:12px;font-weight:700;color:#0f172a">${getToday()}</div>
+          <div style="margin-top:6px;font-size:16px;font-weight:800;color:${s.netDue > 0 ? '#e11d48' : '#059669'}">
+            ${s.netDue > 0 ? 'Net Baaki (Dena): ' + money(s.netDue) : 'Advance Jama: ' + money(Math.abs(s.netDue))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Clean Emerald Separator -->
+      <div class="invoice-separator"></div>
+
+      <!-- SECTION 1: Total Fabric -->
+      <div class="pdf-section" style="background:#fffdfa">
+        <div class="pdf-section-title" style="color:#d97706">Section 1: Total Fabric Diya</div>
+        <table style="width:100%;font-size:12px;border-collapse:collapse">
+          <tr>
+            <td style="padding:4px">Total Fabric Diya: <b>${s.totalRawGiven} pcs</b></td>
+            <td style="padding:4px">Chiffon Diya: <b>${s.rawChiffonGiven} pcs</b></td>
+            <td style="padding:4px">Jorjet Diya: <b>${s.rawJorjetGiven} pcs</b></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- SECTION 2: Design Received -->
+      <div class="pdf-section" style="background:#faf8ff">
+        <div class="pdf-section-title" style="color:#6d28d9">Section 2: Design Received</div>
+        <table style="width:100%;font-size:12px;border-collapse:collapse;margin-bottom:6px">
+          <tr>
+            <td style="padding:4px">Total Kaam Received: <b>${s.totalWorkQty} pcs</b></td>
+            <td style="padding:4px">Chiffon Received: <b>${s.workChiffonRecv} pcs</b></td>
+            <td style="padding:4px">Jorjet Received: <b>${s.workJorjetRecv} pcs</b></td>
+          </tr>
+        </table>
+        ${dKeys.length ? `
+          <div style="font-size:11px;font-weight:700;color:#64748b;margin:4px 0">Design-wise Breakdown:</div>
+          <table style="width:100%;font-size:11px;border-collapse:collapse">
+            <tbody>${designBreakdownRows}</tbody>
+          </table>
+        ` : ''}
+      </div>
+
+      <!-- SECTION 3: Net Fabric -->
+      <div class="pdf-section" style="background:#f8fafc">
+        <div class="pdf-section-title" style="color:#1e293b">Section 3: Net Fabric Remaining</div>
+        <table style="width:100%;font-size:12px;border-collapse:collapse">
+          <tr>
+            <td style="padding:4px">Total Net Baaki: <b>${s.netPieces} pcs</b></td>
+            <td style="padding:4px">Chiffon Baaki: <b>${s.netChiffon} pcs</b></td>
+            <td style="padding:4px">Jorjet Baaki: <b>${s.netJorjet} pcs</b></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- SECTION 4: Net Amount -->
+      <div class="pdf-section" style="background:#f0fdf9">
+        <div class="pdf-section-title" style="color:#059669">Section 4: Net Amount Calculation & Breakdown</div>
+        ${dKeys.length ? `
+          <div style="font-size:11px;font-weight:700;color:#64748b;margin-bottom:4px">Design Mazdoori Calculation (Rate @ Qty):</div>
+          <table style="width:100%;font-size:11px;border-collapse:collapse;margin-bottom:8px">
+            <tbody>${amountBreakdownRows}</tbody>
+          </table>
+        ` : ''}
+        <table style="width:100%;font-size:12px;border-collapse:collapse;border-top:1px dashed #cbd5e1;padding-top:4px">
+          <tr>
+            <td style="padding:4px">Total Mazdoori Earned: <b>${money(s.earned)}</b></td>
+            <td style="padding:4px">Total Cash Paid: <b>${money(s.paid)}</b></td>
+            <td style="padding:4px;color:${s.netDue > 0 ? '#e11d48' : '#059669'}">Net Balance: <b>${money(s.netDue)}</b></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Transaction Log -->
+      <div style="margin-top:16px">
+        <div style="font-size:13px;font-weight:800;margin-bottom:6px;color:#075e54">Complete Itemized Entries</div>
+        <table style="width:100%;border-collapse:collapse;font-size:10px">
+          <thead>
+            <tr style="background:#008069;color:#fff">
+              <th style="border:1px solid #008069;padding:6px">#</th>
+              <th style="border:1px solid #008069;padding:6px">Date</th>
+              <th style="border:1px solid #008069;padding:6px">Type</th>
+              <th style="border:1px solid #008069;padding:6px">Details</th>
+              <th style="border:1px solid #008069;padding:6px">Fabric Movement</th>
+              <th style="border:1px solid #008069;padding:6px;text-align:right">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHTML || '<tr><td colspan="6" style="text-align:center;padding:12px">Koi entry nahi hai.</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+
+  setTimeout(() => {
+    window.print();
+    document.title = originalTitle;
+  }, 120);
+}
+
+// Excel Export Engines
+function downloadCSV(csvContent, fileName) {
+  const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function downloadStatementExcel(monthChoice = 'ALL') {
+  const worker = db.workers.find(w => w.id === activeWorkerId);
+  if (!worker) return;
+
+  let txs = db.tx.filter(x => x.workerId === worker.id);
+  txs.sort((a, b) => a.date.localeCompare(b.date) || a.created - b.created);
+
+  const startPeriod = txs.length ? txs[0].date : getToday();
+  const endPeriod = getToday();
+  const filePeriodStr = (monthChoice === 'ALL') ? `${startPeriod}_to_${endPeriod}` : monthChoice;
+
+  if (monthChoice !== 'ALL') {
+    txs = txs.filter(x => (x.date || '').startsWith(monthChoice));
+  }
+
+  let csv = `Karigar: ${worker.name} (${monthChoice === 'ALL' ? 'Starting ' + startPeriod + ' se Till Date ' + endPeriod : formatMonthLabel(monthChoice)})\r\n`;
+  csv += 'Index,Date,Entry Type,Details,Fabric Movement,Amount\r\n';
+  txs.forEach((t, i) => {
+    let typeName = '', detail = '', rawMov = '-', amt = '0';
+    if (t.type === 'raw') {
+      typeName = 'Fabric Diya';
+      detail = `Chiffon: ${t.chiffon || 0} Jorjet: ${t.jorjet || 0}`;
+      rawMov = `+${Number(t.chiffon || 0) + Number(t.jorjet || 0)}`;
+    } else if (t.type === 'work') {
+      typeName = 'Kaam Received';
+      detail = `${t.designName} (${t.fabric}) Rate ${t.rate}`;
+      rawMov = `-${t.qty}`;
+      amt = `${t.total}`;
+    } else if (t.type === 'pay') {
+      typeName = 'Payment Paid';
+      detail = t.note || 'Cash';
+      amt = `${t.amount}`;
+    }
+    csv += `"${i + 1}","${t.date}","${typeName}","${detail}","${rawMov}","${amt}"\r\n`;
+  });
+
+  const cleanWorkerName = (worker.name || 'Karigar').replace(/[^a-zA-Z0-9_\u0900-\u097F]/g, '_');
+  downloadCSV(csv, `${cleanWorkerName}_Hisab_${filePeriodStr}.csv`);
+}
+
+function exportGlobalExcel() {
+  closeAllDropdowns();
+  let csv = 'Karigar Name,Fabric Given,Fabric Remaining,Chiffon Left,Jorjet Left,Total Work Pcs,Mazdoori Earned,Total Paid,Net Due Balance\r\n';
+  db.workers.forEach(w => {
+    const s = getWorkerStats(w.id, selectedMonthFilter);
+    csv += `"${w.name}","${s.totalRawGiven}","${s.netPieces}","${s.netChiffon}","${s.netJorjet}","${s.totalWorkQty}","${s.earned}","${s.paid}","${s.netDue}"\r\n`;
+  });
+  downloadCSV(csv, `Karigar_Global_Ledger_${selectedMonthFilter}_${getToday()}.csv`);
+}
+
+// Store & Design Settings
+function saveStoreSettings() {
+  const name = document.getElementById('settingStoreName').value.trim();
+  const phone = document.getElementById('settingStorePhone').value.trim();
+  db.store = { name: name || 'Karigar Hisab', phone };
+  saveDB();
+  alert('Store profile successfully save ho gayi hai!');
+}
+
+function addDesign() {
+  const name = document.getElementById('newDName').value.trim();
+  const fabric = document.getElementById('newDFabric').value;
+  const price = Number(document.getElementById('newDPrice').value || 0);
+
+  if (!name || price <= 0) return alert('Design ka Naam aur Rate bharein');
+  db.designs.push({ id: crypto.randomUUID(), name, fabric, price });
+  document.getElementById('newDName').value = '';
+  document.getElementById('newDPrice').value = '';
+  saveDB();
+  renderSettingsData();
+  populateDesignDropdown();
+}
+
+function deleteDesign(id) {
+  db.designs = db.designs.filter(d => d.id !== id);
+  saveDB();
+  renderSettingsData();
+  populateDesignDropdown();
+}
+
+function renderSettingsData() {
+  document.getElementById('settingStoreName').value = db.store?.name || '';
+  document.getElementById('settingStorePhone').value = db.store?.phone || '';
+
+  const list = document.getElementById('designsMasterList');
+  if (!list) return;
+  list.innerHTML = db.designs.map(d => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--line);font-size:12px">
+      <span><b>${esc(d.name)}</b> (${esc(d.fabric)}) - ${money(d.price)}</span>
+      <button type="button" style="background:var(--rose-bg);color:var(--rose);border:1px solid var(--rose-border);padding:2px 6px;border-radius:4px;font-size:10px" onclick="deleteDesign('${d.id}')">✕</button>
+    </div>
+  `).join('') || '<div style="color:var(--text-muted);font-size:12px;padding:10px 0">Koi design nahi hai.</div>';
+}
+
+function openModal(id) {
+  closeAllDropdowns();
+  document.getElementById(id).classList.add('show');
+  if (id === 'settingsModal') renderSettingsData();
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+}
+
+function exportData() {
+  closeAllDropdowns();
+  const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `karigar_hisab_backup_${getToday()}.json`;
+  a.click();
+}
+
+function importData(e) {
+  closeAllDropdowns();
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      if (Array.isArray(data.workers) && Array.isArray(data.tx)) {
+        db = data;
+        saveDB();
+      }
+    } catch { alert('Invalid File'); }
+  };
+  reader.readAsText(file);
+}
+
+// Initial Boot
+setMonthFilter(getCurrentMonthKey(), true);
+</script>
+</body>
+</html>
